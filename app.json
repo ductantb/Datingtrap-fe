@@ -16,13 +16,20 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.datingtrap.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8acfc7b5-fe4b-4a23-a71d-835d687ec5dc"
+      }
     }
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "613465939244",
+    "project_id": "datingtrap-b25f7",
+    "storage_bucket": "datingtrap-b25f7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613465939244:android:294e4bb8146453768de089",
+        "android_client_info": {
+          "package_name": "com.datingtrap.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGV3-mpnXAJmI0jIrCjnL2GGCuLGW4oGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

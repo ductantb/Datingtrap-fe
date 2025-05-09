@@ -12,7 +12,20 @@
           "package_name": "com.datingtrap.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "613465939244-cdp9bpb6ajjt9rcuakkbppaimor2jcsp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.datingtrap.app",
+            "certificate_hash": "e697d6c23e1db5b5d8bd9be515192701b83885bb"
+          }
+        },
+        {
+          "client_id": "613465939244-d5cfuensgu5c9s0m7eq73p0l7petlamg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAGV3-mpnXAJmI0jIrCjnL2GGCuLGW4oGE"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613465939244-d5cfuensgu5c9s0m7eq73p0l7petlamg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

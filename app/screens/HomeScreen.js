@@ -1,8 +1,10 @@
 import { View, Text, Button } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
+import useAuth from "../hooks/useAuth";
+import { auth } from '../../firebase'; // file cấu hình firebase của bạn
 // import Swiper from "react-native-deck-swiper";
 
 const FData = [
@@ -29,12 +31,29 @@ const FData = [
   },
 ];
 
+
+
 const HomeScreen = () => {
   const navigation = useNavigation();
+   const { logout } = useAuth(); 
+    const [token, setToken] = useState("");
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      auth.currentUser.getIdToken(true).then(setToken);
+    }
+  }, []);
 
   return (
     <SafeAreaView>
       <Header />
+        <View style={{ padding: 20 }}>
+           <View>
+      <Text>Firebase ID Token:</Text>
+      <Text>{token}</Text>
+    </View>
+        <Button title="Log Out" onPress={logout} />
+      </View>
 
       {/* Cards */}
       {/* <Swiper

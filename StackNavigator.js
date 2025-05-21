@@ -4,11 +4,13 @@ import HomeScreen from "./app/screens/HomeScreen";
 import ChatScreen from "./app/screens/ChatScreen";
 import LoginScreen from "./app/screens/LoginScreen";
 import ProfileScreen from "./app/screens/ProfileScreen";
+import useAuth from "./app/hooks/useAuth";
+
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
-  const user = true;
+  const { user } = useAuth();
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {user ? (
@@ -18,7 +20,9 @@ const StackNavigator = () => {
           <Stack.Screen name="Profile" component={ProfileScreen} />
         </>
       ) : (
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <>
+          <Stack.Screen name="Login" component={LoginScreen} />
+        </>
       )}
       {/* <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />

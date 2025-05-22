@@ -20,7 +20,7 @@ const Header = () => {
         <Text className="text-3xl font-bold "> Dating trap </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
+      <TouchableOpacity onPress={() => navigation.navigate("ChatList")}>
         <Ionicons name="chatbubbles-outline" size={30} color="black" />
       </TouchableOpacity>
     </View>

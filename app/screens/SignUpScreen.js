@@ -131,62 +131,62 @@ const SignUpScreen = () => {
   };
 
   const handleSignUp = async () => {
-  if (selectedHobbies.length === 0) {
-    Alert.alert("Error", "Please select at least one hobby");
-    return;
-  }
+    if (selectedHobbies.length === 0) {
+      Alert.alert("Error", "Please select at least one hobby");
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    // Lấy kết quả trả về từ đăng ký
-    const userCredential = await registerWithEmail(email, password);
+    try {
+      // Đăng ký Firebase user và lấy Firebase UID
+      const { firebaseUid } = await registerWithEmail(email, password);
+      
+      console.log("Firebase UID:", firebaseUid);
 
-    // Lấy token từ userCredential.user
-    const token = await userCredential.user.getIdToken();
-    setFireBaseId(token);
+      const signUpData = {
+        username,
+        email,
+        fullName,
+        age: parseInt(age),
+        bio,
+        gender,
+        fireBaseId: firebaseUid, // Sử dụng Firebase UID thay vì token
+        job,
+        location,
+        avatarUrl,
+        birthDate: birthDate.toISOString().split('T')[0], // Format YYYY-MM-DD
+        preference: {
+          interestedGender,
+          maxDistance: parseInt(maxDistance),
+          minAge: parseInt(minAge),
+          maxAge: parseInt(maxAge),
+          datingPurpose
+        },
+        hobbyIds: [] // Để trống vì backend chưa hỗ trợ hobbies
+      };
 
-    const signUpData = {
-      username,
-      email,
-      fullName,
-      age: parseInt(age),
-      bio,
-      gender,
-      fireBaseId: token,  // dùng token thay vì state chưa kịp set
-      job,
-      location,
-      avatarUrl,
-      birthDate: birthDate.toISOString().split('T')[0], // Format YYYY-MM-DD
-      preference: {
-        interestedGender,
-        maxDistance: parseInt(maxDistance),
-        minAge: parseInt(minAge),
-        maxAge: parseInt(maxAge),
-        datingPurpose
-      },
-      hobbyIds: [] // Chưa rõ backend, để trống tạm thời
-    };
+      console.log("Sign Up Data:", signUpData);
+      
+      const profileResult = await registerUserProfile(signUpData);
+      console.log("Profile created:", profileResult);
 
-    console.log("Sign Up Data:", signUpData);
-    const profileResult = await registerUserProfile(signUpData);
+      Alert.alert(
+        "Success", 
+        "Account created successfully!",
+        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+      );
 
-    Alert.alert(
-      "Success", 
-      "Account created successfully!",
-      [{ text: "OK", onPress: () => navigation.navigate("Login") }]
-    );
-
-  } catch (error) {
-    console.error('Sign up error:', error);
-    Alert.alert(
-      "Error", 
-      error.message || "Failed to create account. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+    } catch (error) {
+      console.error('Sign up error:', error);
+      Alert.alert(
+        "Error", 
+        error.message || "Failed to create account. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   const renderStep1 = () => (

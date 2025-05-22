@@ -131,30 +131,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const registerWithEmail = async (email, password) => {
-  setLoading(true);
-  try {
-    if (!email || !password) {
-      throw new Error("Email và mật khẩu không được để trống");
-    }
-    if (password.length < 6) {
-      throw new Error("Mật khẩu phải có ít nhất 6 ký tự");
-    }
+    const registerWithEmail = async (email, password) => {
+    setLoading(true);
+    try {
+      if (!email || !password) {
+        throw new Error("Email và mật khẩu không được để trống");
+      }
+      if (password.length < 6) {
+        throw new Error("Mật khẩu phải có ít nhất 6 ký tự");
+      }
 
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const token = await userCredential.user.getIdToken();
-    setToken(token);
-    localStorage.setItem('token', encodeURIComponent(token));
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const token = await userCredential.user.getIdToken();
+      setToken(token);
+      localStorage.setItem('token', encodeURIComponent(token));
 
-    
-  } catch (err) {
-    console.error("Lỗi đăng ký:", err);
-    setError(err.message);
-    Alert.alert("Lỗi đăng ký", err.message); // 👈 Hiển thị thông báo
-  } finally {
-    setLoading(false);
-  }
-};
+      // Return both userCredential and Firebase UID for registration
+      return {
+        userCredential,
+        firebaseUid: userCredential.user.uid,
+        token
+      };
+      
+    } catch (err) {
+      console.error("Lỗi đăng ký:", err);
+      setError(err.message);
+      throw err; // Re-throw để SignUpScreen có thể catch
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
  const loginWithGoogle = async () => {
   if (!request) {

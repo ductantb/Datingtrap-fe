@@ -15,12 +15,19 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import useAuth from "../hooks/useAuth";
+import { useNavigation } from '@react-navigation/native';
+import { registerUserProfile } from "../services/authService";
+import firebase from "firebase/compat/app";
+import { getAuth } from "firebase/auth";
+import { app } from "../../firebase";
 
-const SignUpScreen = ({ navigation }) => {
+const SignUpScreen = () => {
   // Basic info states
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
   const [age, setAge] = useState("");
   const [bio, setBio] = useState("");
   const [gender, setGender] = useState("male");
@@ -29,6 +36,7 @@ const SignUpScreen = ({ navigation }) => {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [birthDate, setBirthDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+   const [fireBaseId, setFireBaseId] = useState("");
 
   // Preference states
   const [interestedGender, setInterestedGender] = useState("both");
@@ -45,6 +53,10 @@ const SignUpScreen = ({ navigation }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
+   const {
+    registerWithEmail,
+    } = useAuth();
+    const navigation = useNavigation();
   // Predefined hobbies
   const commonHobbies = [
     "Reading", "Traveling", "Cooking", "Music", "Sports", "Photography",
@@ -119,13 +131,21 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   const handleSignUp = async () => {
-    if (selectedHobbies.length === 0) {
-      Alert.alert("Error", "Please select at least one hobby");
-      return;
-    }
+  if (selectedHobbies.length === 0) {
+    Alert.alert("Error", "Please select at least one hobby");
+    return;
+  }
 
-    setLoading(true);
-    
+  setLoading(true);
+
+  try {
+    // Lấy kết quả trả về từ đăng ký
+    const userCredential = await registerWithEmail(email, password);
+
+    // Lấy token từ userCredential.user
+    const token = await userCredential.user.getIdToken();
+    setFireBaseId(token);
+
     const signUpData = {
       username,
       email,
@@ -133,6 +153,7 @@ const SignUpScreen = ({ navigation }) => {
       age: parseInt(age),
       bio,
       gender,
+      fireBaseId: token,  // dùng token thay vì state chưa kịp set
       job,
       location,
       avatarUrl,
@@ -144,33 +165,29 @@ const SignUpScreen = ({ navigation }) => {
         maxAge: parseInt(maxAge),
         datingPurpose
       },
-      hobbyIds: [] // This would be populated with actual hobby IDs from backend
+      hobbyIds: [] // Chưa rõ backend, để trống tạm thời
     };
 
-    try {
-      // Replace with your actual API endpoint
-      const response = await fetch('YOUR_API_ENDPOINT/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(signUpData),
-      });
+    console.log("Sign Up Data:", signUpData);
+    const profileResult = await registerUserProfile(signUpData);
 
-      if (response.ok) {
-        Alert.alert("Success", "Account created successfully!", [
-          { text: "OK", onPress: () => navigation.navigate("Login") }
-        ]);
-      } else {
-        const error = await response.json();
-        Alert.alert("Error", error.message || "Failed to create account");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    Alert.alert(
+      "Success", 
+      "Account created successfully!",
+      [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+    );
+
+  } catch (error) {
+    console.error('Sign up error:', error);
+    Alert.alert(
+      "Error", 
+      error.message || "Failed to create account. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const renderStep1 = () => (
     <View className="p-6">
@@ -213,6 +230,20 @@ const SignUpScreen = ({ navigation }) => {
           value={fullName}
           onChangeText={setFullName}
         />
+      </View>
+
+      <View className="mb-4">
+        <Text className="text-gray-700 text-sm font-medium mb-1">Password *</Text>
+        <View className="relative">
+          <MaterialIcons name="lock" size={20} color="gray" className="absolute left-3 top-1/2 -translate-y-1/2" />
+          <TextInput
+            className="pl-10 w-full px-3 py-3 border border-gray-300 rounded-lg focus:border-blue-500"
+            placeholder="**********"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+          />
+        </View>
       </View>
 
       <View className="mb-4">

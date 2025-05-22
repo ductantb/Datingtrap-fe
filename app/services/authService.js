@@ -15,3 +15,18 @@ export const verifyToken = async (token) => {
     throw error;
   }
 };
+
+export const registerUserProfile = async (signUpData) => {
+  try {
+
+    const response = await axios.post(
+      `${API_BASE_URL}/api/auth/register`,
+      signUpData,
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("❌ Register API Error:", error.response?.data || error.message);
+    throw error;
+  }
+};

@@ -10,6 +10,8 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import TinderCardComponent from "../components/TinderCard";
+import { useNavigation } from '@react-navigation/native';
+
 
 const FData = [
   {

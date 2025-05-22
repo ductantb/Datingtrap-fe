@@ -55,19 +55,19 @@ export const AuthProvider = ({ children }) => {
       setUser(user || null);
       setLoadingInitial(false);
       if (user) {
-        // Nếu có user, lấy token rồi verify
         try {
           const token = await user.getIdToken();
           setToken(token);
+          console.log('Stored token:', token);
 
           // Gọi verifyToken để lấy userId từ backend
-          const res = await verifyToken(token);
-          if (res?.data?.userId) {
-            setUserId(res.data.userId);
-            // Lưu userId và token vào AsyncStorage
-            await AsyncStorage.setItem('userId', res.data.userId.toString());
-            await AsyncStorage.setItem('token', token);
-          }
+          // const res = await verifyToken(token);
+          // if (res?.data?.userId) {
+          //   setUserId(res.data.userId);
+          //   // Lưu userId và token vào AsyncStorage
+          //   await AsyncStorage.setItem('userId', res.data.userId.toString());
+          //   await AsyncStorage.setItem('token', token);
+          // }
         } catch (e) {
           console.log("Error verifying token:", e);
         }
@@ -109,16 +109,21 @@ export const AuthProvider = ({ children }) => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCredential.user.getIdToken();
       setToken(token);
+      localStorage.setItem('token', encodeURIComponent(token));
       const res = await verifyToken(token);
-      if (res?.data?.userId) {
-        setUserId(res.data.userId);
-        await AsyncStorage.setItem('userId', res.data.userId.toString());
-        await AsyncStorage.setItem('token', token);
-        const storedUserId = await AsyncStorage.getItem('userId');
-      const storedToken = await AsyncStorage.getItem('token');
-      console.log('Stored userId:', storedUserId);
-      console.log('Stored token:', storedToken);
-      }
+      console.log('Response from verifyToken:', res);
+
+      setUserId(res.userId); 
+      console.log("👉 Extracted userId:", res.userId);
+
+      localStorage.setItem('userId', res.userId);
+      //   await AsyncStorage.setItem('userId', res.data.userId.toString());
+      //   await AsyncStorage.setItem('token', token);
+      //   const storedUserId = await AsyncStorage.getItem('userId');
+      //   const storedToken = await AsyncStorage.getItem('token');
+      // console.log('Stored userId:', storedUserId);
+      // console.log('Stored token:', storedToken);
+      //for android
     } catch (err) {
       setError(err.message);
     } finally {
@@ -137,16 +142,11 @@ export const AuthProvider = ({ children }) => {
     }
 
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    const token = await user.getIdToken();
-
-    const res = await verifyToken(token);
-    if (res?.data?.userId) {
-      setUserId(res.data.userId);
-      await AsyncStorage.setItem('userId', res.data.userId.toString());
-      await AsyncStorage.setItem('token', token);
-    }
+    const token = await userCredential.user.getIdToken();
     setToken(token);
+    localStorage.setItem('token', encodeURIComponent(token));
+
+    
   } catch (err) {
     console.error("Lỗi đăng ký:", err);
     setError(err.message);

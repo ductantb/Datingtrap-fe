@@ -46,6 +46,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const { logout } = useAuth();
 
   const config = {
     velocityThreshold: 0.3,
@@ -121,6 +122,7 @@ const HomeScreen = () => {
           </View>
         </View>
       </TinderCard>
+       <Button title="Log Out" onPress={logout} />
     </SafeAreaView>
   );
 };

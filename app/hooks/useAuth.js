@@ -114,6 +114,10 @@ export const AuthProvider = ({ children }) => {
         setUserId(res.data.userId);
         await AsyncStorage.setItem('userId', res.data.userId.toString());
         await AsyncStorage.setItem('token', token);
+        const storedUserId = await AsyncStorage.getItem('userId');
+      const storedToken = await AsyncStorage.getItem('token');
+      console.log('Stored userId:', storedUserId);
+      console.log('Stored token:', storedToken);
       }
     } catch (err) {
       setError(err.message);

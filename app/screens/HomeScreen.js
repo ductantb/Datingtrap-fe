@@ -4,66 +4,56 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import useAuth from "../hooks/useAuth";
-import { auth } from '../../firebase'; // file cấu hình firebase của bạn
-// import Swiper from "react-native-deck-swiper";
-
-const FData = [
-  {
-    fullName: "Huu Thai",
-    job: "Developer",
-    avatarUrl:
-      "https://i.pinimg.com/736x/49/67/4c/49674ccc074f5b28829c058d293cad60.jpg",
-    age: 20,
-  },
-  {
-    fullName: "Duc Tan",
-    job: "Developer",
-    avatarUrl:
-      "https://i.pinimg.com/736x/42/7e/54/427e549668d89c519811fd77a9a6f7f9.jpg",
-    age: 20,
-  },
-  {
-    fullName: "Quang Vu",
-    job: "Developer",
-    avatarUrl:
-      "https://i.pinimg.com/736x/48/62/99/486299625e08a1e62ad9451dac4630ff.jpg",
-    age: 20,
-  },
-];
-
-
+import { auth } from '../../firebase';
+import { verifyToken } from "../services/authService";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-   const { logout } = useAuth(); 
-    const [token, setToken] = useState("");
+  const { logout } = useAuth();
+  const [token, setToken] = useState("");
+  const [userId, setUserId] = useState("");
+  const [userid, setUserid] = useState("");
 
   useEffect(() => {
-    if (auth.currentUser) {
-      auth.currentUser.getIdToken(true).then(setToken);
+  const fetchTokenAndVerify = async () => {
+    try {
+      if (auth.currentUser) {
+        const idToken = await auth.currentUser.getIdToken(true);
+        setToken(idToken);
+
+        const res = await verifyToken(idToken);
+        
+        setUserId(res.userId);  
+      }
+      const storedUserId = await AsyncStorage.getItem('userId');
+      if (storedUserId) {
+        setUserid(storedUserId);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy token hoặc verifyToken:", error);
     }
-  }, []);
+  };
+
+  fetchTokenAndVerify();
+}, []);
 
   return (
     <SafeAreaView>
       <Header />
-        <View style={{ padding: 20 }}>
-           <View>
-      <Text>Firebase ID Token:</Text>
-      <Text>{token}</Text>
-    </View>
+      <View style={{ padding: 20 }}>
+        <View>
+          <Text>Firebase ID Token:</Text>
+          <Text>{token}</Text>
+
+          <Text style={{ marginTop: 10 }}>User ID từ backend:</Text>
+          <Text>{userId || "Đang xác thực..."}</Text>
+          <Text style={{ marginTop: 10 }}>User ID từ storage:</Text>
+          <Text>{userid}</Text>
+        </View>
+
         <Button title="Log Out" onPress={logout} />
       </View>
-
-      {/* Cards */}
-      {/* <Swiper
-        cards={FData}
-        renderCard={(card) => {
-          <View>
-            <Text>{card.fullName}</Text>
-          </View>;
-        }}
-      /> */}
     </SafeAreaView>
   );
 };

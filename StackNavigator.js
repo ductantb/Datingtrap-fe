@@ -6,7 +6,11 @@ import LoginScreen from "./app/screens/LoginScreen";
 import SignUpScreen from "./app/screens/SignUpScreen";
 import  ChatListScreen  from "./app/screens/ChatListScreen";
 import ProfileScreen from "./app/screens/ProfileScreen";
+
+import EditProfileScreen from "./app/screens/EditProfileScreen";
+
 import NotificationScreen from "./app/screens/NotificationScreen.js";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +24,11 @@ const StackNavigator = () => {
           <Stack.Screen name="ChatList" component={ChatListScreen} />
           <Stack.Screen name="Chat" component={ChatScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+
           <Stack.Screen name="Notifications" component={NotificationScreen} />
+
         </>
       ) : (
         <>

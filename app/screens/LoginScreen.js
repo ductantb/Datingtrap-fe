@@ -15,7 +15,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import useAuth from "../hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -193,13 +193,9 @@ const LoginScreen = () => {
 
       {/* Toggle Login / Sign Up */}
       <View className="flex-row items-center justify-center mb-6">
-        <Text className="text-sm text-gray-600">
-          {isSignUp ? "Already have an account? " : "Don't have an account? "}
-        </Text>
-        <Pressable onPress={toggleAuthMode}>
-          <Text className="text-blue-500 font-medium">
-            {isSignUp ? "Login" : "Sign Up"}
-          </Text>
+        <Text className=" text-sm text-gray-600">Don't have an account? </Text>
+        <Pressable onPress={() => navigation.navigate("SignUp")}>
+          <Text className="text-blue-500 font-medium ">Sign Up</Text>
         </Pressable>
       </View>
     </View>

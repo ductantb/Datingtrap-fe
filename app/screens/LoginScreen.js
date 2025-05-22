@@ -6,7 +6,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -90,7 +90,7 @@ const LoginScreen = () => {
 
       <View className="flex-row items-center justify-center mb-6">
         <Text className=" text-sm text-gray-600">Don't have an account? </Text>
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate("SignUp")}>
           <Text className="text-blue-500 font-medium ">Sign Up</Text>
         </Pressable>
       </View>

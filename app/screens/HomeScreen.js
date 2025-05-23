@@ -61,7 +61,6 @@ const HomeScreen = () => {
     <SafeAreaView>
       <Header />
       <TinderCardComponent />
-       <Button title="Log Out" onPress={logout} />
     </SafeAreaView>
   );
 };

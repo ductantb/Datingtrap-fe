@@ -28,7 +28,7 @@ const ChatListScreen = () => {
   const [matches, setMatches] = useState([
     {
       id: 1,
-      name: "Sarah Johnson",
+      name: "Sarahh Johnson",
       avatarUrl: "https://i.pinimg.com/736x/42/7e/54/427e549668d89c519811fd77a9a6f7f9.jpg",
       age: 25,
       mutualFriends: 3,

@@ -1,5 +1,6 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image, Button } from "react-native";
 import React, { useCallback } from 'react';
+import { logout } from '../hooks/useAuth';
 
 import {
   heightPercentageToDP as hp,

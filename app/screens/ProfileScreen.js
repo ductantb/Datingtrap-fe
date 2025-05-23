@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, Image } from "react-native";
-import React from "react";
+import React, { useCallback } from 'react';
+
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -9,7 +10,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useProfile } from "../contexts/ProfileContext";
-
+import { useFocusEffect } from "@react-navigation/native";
 
 
 
@@ -41,7 +42,23 @@ const ProfileScreen = () => {
   const { profile } = useProfile();
   const navigation = useNavigation();
 
-  console.log(profile.hobbies);
+//   useFocusEffect(
+//   useCallback(() => {
+//     const loadProfile = async () => {
+//       const profileData = await AsyncStorage.getItem("profile");
+//       if (profileData) {
+//         const { avatarUrl, bio, hobbies, preference } = JSON.parse(profileData);
+//         setAvatarUrl(avatarUrl);
+//         setBio(bio);
+//         setHobbies(hobbies);
+//         setInterestedGender(preference?.interestedGender || "female");
+//       }
+//     };
+//     loadProfile();
+//   }, [])
+// );
+
+  // console.log(profile.hobbies);
   return (
     <ScrollView
       className="relative bg-white flex-1"

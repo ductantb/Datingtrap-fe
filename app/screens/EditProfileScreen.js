@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const availableHobbies = [
   "Reading",
@@ -27,25 +26,15 @@ const availableHobbies = [
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
+  const { profile, updateProfile } = useProfile();
 
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [bio, setBio] = useState("");
-  const [hobbies, setHobbies] = useState([]);
-  const [interestedGender, setInterestedGender] = useState("female");
-
-  useEffect(() => {
-    const loadProfile = async () => {
-      const profileData = await AsyncStorage.getItem("profile");
-      if (profileData) {
-        const { avatarUrl, bio, hobbies, preference } = JSON.parse(profileData);
-        setAvatarUrl(avatarUrl);
-        setBio(bio);
-        setHobbies(hobbies);
-        setInterestedGender(preference?.interestedGender || "female");
-      }
-    };
-    loadProfile();
-  }, []);
+  // Initialize state from context
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl || "");
+  const [bio, setBio] = useState(profile.bio || "");
+  const [hobbies, setHobbies] = useState(profile.hobbies || []);
+  const [interestedGender, setInterestedGender] = useState(
+    profile.preference?.interestedGender || "female"
+  );
 
   const toggleHobby = (hobbyName) => {
     setHobbies((prev) => {
@@ -59,16 +48,21 @@ const EditProfileScreen = () => {
   };
 
   const handleSave = async () => {
-    const profileData = {
+    const newProfile = {
+      ...profile,
       avatarUrl,
       bio,
       hobbies,
       preference: {
+        ...profile.preference,
         interestedGender,
       },
     };
-    await AsyncStorage.setItem("profile", JSON.stringify(profileData));
-    navigation.goBack();
+    // Save to storage
+    await AsyncStorage.setItem("profile", JSON.stringify(newProfile));
+    // Update context
+    updateProfile(newProfile);
+    navigation.navigate("Profile");
   };
 
   return (

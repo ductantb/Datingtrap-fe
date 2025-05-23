@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
+// import DateTimePicker from "@react-native-community/datetimepicker";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -47,9 +47,26 @@ const SignUpScreen = ({ navigation }) => {
 
   // Predefined hobbies
   const commonHobbies = [
-    "Reading", "Traveling", "Cooking", "Music", "Sports", "Photography",
-    "Movies", "Gaming", "Dancing", "Fitness", "Art", "Nature", "Coffee",
-    "Wine", "Technology", "Fashion", "Food", "Animals", "Books", "Shopping"
+    "Reading",
+    "Traveling",
+    "Cooking",
+    "Music",
+    "Sports",
+    "Photography",
+    "Movies",
+    "Gaming",
+    "Dancing",
+    "Fitness",
+    "Art",
+    "Nature",
+    "Coffee",
+    "Wine",
+    "Technology",
+    "Fashion",
+    "Food",
+    "Animals",
+    "Books",
+    "Shopping",
   ];
 
   const handleDateChange = (event, selectedDate) => {
@@ -70,38 +87,42 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   const removeHobby = (hobby) => {
-    setSelectedHobbies(selectedHobbies.filter(h => h !== hobby));
+    setSelectedHobbies(selectedHobbies.filter((h) => h !== hobby));
   };
 
   const addCustomHobby = () => {
-    if (newHobby.trim() && !selectedHobbies.includes(newHobby.trim()) && selectedHobbies.length < 10) {
+    if (
+      newHobby.trim() &&
+      !selectedHobbies.includes(newHobby.trim()) &&
+      selectedHobbies.length < 10
+    ) {
       setSelectedHobbies([...selectedHobbies, newHobby.trim()]);
       setNewHobby("");
     }
   };
 
-//   const validateStep1 = () => {
-//     if (!username.trim() || !email.trim() || !fullName.trim() || !age) {
-//       Alert.alert("Error", "Please fill in all required fields");
-//       return false;
-//     }
-//     if (!email.includes("@")) {
-//       Alert.alert("Error", "Please enter a valid email address");
-//       return false;
-//     }
-//     return true;
-//   };
+  //   const validateStep1 = () => {
+  //     if (!username.trim() || !email.trim() || !fullName.trim() || !age) {
+  //       Alert.alert("Error", "Please fill in all required fields");
+  //       return false;
+  //     }
+  //     if (!email.includes("@")) {
+  //       Alert.alert("Error", "Please enter a valid email address");
+  //       return false;
+  //     }
+  //     return true;
+  //   };
 
-//   const validateStep2 = () => {
-//     if (!job.trim() || !location.trim()) {
-//       Alert.alert("Error", "Please fill in job and location");
-//       return false;
-//     }
-//     return true;
-//   };
+  //   const validateStep2 = () => {
+  //     if (!job.trim() || !location.trim()) {
+  //       Alert.alert("Error", "Please fill in job and location");
+  //       return false;
+  //     }
+  //     return true;
+  //   };
 
   const handleNext = () => {
-    if (currentStep === 1 ) {
+    if (currentStep === 1) {
       setCurrentStep(2);
     } else if (currentStep === 2) {
       setCurrentStep(3);
@@ -125,7 +146,7 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     setLoading(true);
-    
+
     const signUpData = {
       username,
       email,
@@ -136,30 +157,30 @@ const SignUpScreen = ({ navigation }) => {
       job,
       location,
       avatarUrl,
-      birthDate: birthDate.toISOString().split('T')[0], // Format YYYY-MM-DD
+      birthDate: birthDate.toISOString().split("T")[0], // Format YYYY-MM-DD
       preference: {
         interestedGender,
         maxDistance: parseInt(maxDistance),
         minAge: parseInt(minAge),
         maxAge: parseInt(maxAge),
-        datingPurpose
+        datingPurpose,
       },
-      hobbyIds: [] // This would be populated with actual hobby IDs from backend
+      hobbyIds: [], // This would be populated with actual hobby IDs from backend
     };
 
     try {
       // Replace with your actual API endpoint
-      const response = await fetch('YOUR_API_ENDPOINT/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("YOUR_API_ENDPOINT/api/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(signUpData),
       });
 
       if (response.ok) {
         Alert.alert("Success", "Account created successfully!", [
-          { text: "OK", onPress: () => navigation.navigate("Login") }
+          { text: "OK", onPress: () => navigation.navigate("Login") },
         ]);
       } else {
         const error = await response.json();
@@ -177,11 +198,18 @@ const SignUpScreen = ({ navigation }) => {
       <Text className="text-2xl font-bold text-gray-800 mb-6 text-center">
         Basic Information
       </Text>
-      
+
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Username *</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Username *
+        </Text>
         <View className="relative">
-          <Ionicons name="person" size={20} color="gray" className="absolute left-3 top-1/2 -translate-y-1/2" />
+          <Ionicons
+            name="person"
+            size={20}
+            color="gray"
+            className="absolute left-3 top-1/2 -translate-y-1/2"
+          />
           <TextInput
             className="pl-10 w-full px-3 py-3 border border-gray-300 rounded-lg focus:border-blue-500"
             placeholder="Enter username"
@@ -194,7 +222,12 @@ const SignUpScreen = ({ navigation }) => {
       <View className="mb-4">
         <Text className="text-gray-700 text-sm font-medium mb-1">Email *</Text>
         <View className="relative">
-          <MaterialIcons name="email" size={20} color="gray" className="absolute left-3 top-1/2 -translate-y-1/2" />
+          <MaterialIcons
+            name="email"
+            size={20}
+            color="gray"
+            className="absolute left-3 top-1/2 -translate-y-1/2"
+          />
           <TextInput
             className="pl-10 w-full px-3 py-3 border border-gray-300 rounded-lg focus:border-blue-500"
             placeholder="your@email.com"
@@ -206,7 +239,9 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Full Name *</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Full Name *
+        </Text>
         <TextInput
           className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:border-blue-500"
           placeholder="Enter your full name"
@@ -216,14 +251,16 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Birth Date</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Birth Date
+        </Text>
         <Pressable
           onPress={() => setShowDatePicker(true)}
           className="w-full px-3 py-3 border border-gray-300 rounded-lg bg-white"
         >
           <Text>{birthDate.toDateString()}</Text>
         </Pressable>
-        {showDatePicker && (
+        {/* {showDatePicker && (
           <DateTimePicker
             value={birthDate}
             mode="date"
@@ -231,16 +268,13 @@ const SignUpScreen = ({ navigation }) => {
             onChange={handleDateChange}
             maximumDate={new Date()}
           />
-        )}
+        )} */}
       </View>
 
       <View className="mb-4">
         <Text className="text-gray-700 text-sm font-medium mb-1">Gender</Text>
         <View className="border border-gray-300 rounded-lg">
-          <Picker
-            selectedValue={gender}
-            onValueChange={setGender}
-          >
+          <Picker selectedValue={gender} onValueChange={setGender}>
             <Picker.Item label="Male" value="male" />
             <Picker.Item label="Female" value="female" />
             <Picker.Item label="Other" value="other" />
@@ -267,7 +301,9 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Location *</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Location *
+        </Text>
         <TextInput
           className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:border-blue-500"
           placeholder="Where are you located?"
@@ -290,7 +326,9 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Profile Picture URL</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Profile Picture URL
+        </Text>
         <TextInput
           className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:border-blue-500"
           placeholder="https://example.com/photo.jpg"
@@ -308,7 +346,9 @@ const SignUpScreen = ({ navigation }) => {
       </Text>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Interested in</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Interested in
+        </Text>
         <View className="border border-gray-300 rounded-lg">
           <Picker
             selectedValue={interestedGender}
@@ -322,7 +362,9 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Age Range</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Age Range
+        </Text>
         <View className="flex-row space-x-2">
           <View className="flex-1">
             <TextInput
@@ -346,7 +388,9 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Max Distance (km)</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Max Distance (km)
+        </Text>
         <TextInput
           className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:border-blue-500"
           placeholder="50"
@@ -357,7 +401,9 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Looking for</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Looking for
+        </Text>
         <View className="border border-gray-300 rounded-lg">
           <Picker
             selectedValue={datingPurpose}
@@ -406,7 +452,9 @@ const SignUpScreen = ({ navigation }) => {
       </View>
 
       <View className="mb-4">
-        <Text className="text-gray-700 text-sm font-medium mb-1">Add custom hobby</Text>
+        <Text className="text-gray-700 text-sm font-medium mb-1">
+          Add custom hobby
+        </Text>
         <View className="flex-row">
           <TextInput
             className="flex-1 px-3 py-3 border border-gray-300 rounded-l-lg focus:border-blue-500"

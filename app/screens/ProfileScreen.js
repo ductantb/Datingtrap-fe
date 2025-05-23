@@ -43,6 +43,7 @@ const ProfileScreen = () => {
 
   const { profile } = useProfile();
   const navigation = useNavigation();
+  const { logout } = useAuth();
 
 //   useFocusEffect(
 //   useCallback(() => {

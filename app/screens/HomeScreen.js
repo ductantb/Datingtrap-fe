@@ -13,6 +13,7 @@ import TinderCardComponent from "../components/TinderCard";
 
 const FData = [
   {
+    id: 1,
     fullName: "Huu Thai",
     job: "Developer",
     avatarUrl:
@@ -20,6 +21,7 @@ const FData = [
     age: 20,
   },
   {
+    id: 2,
     fullName: "Duc Tan",
     job: "Developer",
     avatarUrl:
@@ -27,10 +29,27 @@ const FData = [
     age: 20,
   },
   {
+    id: 3,
     fullName: "Quang Vu",
     job: "Developer",
     avatarUrl:
       "https://i.pinimg.com/736x/48/62/99/486299625e08a1e62ad9451dac4630ff.jpg",
+    age: 20,
+  },
+  {
+    id: 4,
+    fullName: "Hung Vu",
+    job: "Developer",
+    avatarUrl:
+      "https://i.pinimg.com/736x/dd/16/a1/dd16a118adec92cbbcdaeee66e8e2677.jpg",
+    age: 20,
+  },
+  {
+    id: 5,
+    fullName: "Oke Vu",
+    job: "Developer",
+    avatarUrl:
+      "https://i.pinimg.com/736x/b9/92/9f/b9929f0dc9ea56cf80894c704faf4811.jpg",
     age: 20,
   },
 ];

@@ -60,6 +60,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView>
       <Header />
+
       <TinderCardComponent />
     </SafeAreaView>
   );

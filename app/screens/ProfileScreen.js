@@ -11,6 +11,7 @@ import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useProfile } from "../contexts/ProfileContext";
 import { useFocusEffect } from "@react-navigation/native";
+import useAuth from "../hooks/useAuth";
 
 
 
@@ -150,7 +151,7 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        
+         <Button title="Log Out" onPress={logout} />
       </View>
     </ScrollView>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,30 +10,32 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
+import { useProfile } from "../contexts/ProfileContext";
 
-const availableHobbies = ["Reading", "Traveling", "Cooking", "Music", "Sports", "Gaming", "Photography", "Art", "Politics", "Tourism"];
+const availableHobbies = [
+  "Reading",
+  "Traveling",
+  "Cooking",
+  "Music",
+  "Sports",
+  "Gaming",
+  "Photography",
+  "Art",
+  "Politics",
+  "Tourism",
+];
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
+  const { profile, updateProfile } = useProfile();
 
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [bio, setBio] = useState("");
-  const [hobbies, setHobbies] = useState([]);
-  const [interestedGender, setInterestedGender] = useState("female");
-
-  useEffect(() => {
-    const loadProfile = async () => {
-      const profileData = await AsyncStorage.getItem("profile");
-      if (profileData) {
-        const { avatarUrl, bio, hobbies, preference } = JSON.parse(profileData);
-        setAvatarUrl(avatarUrl);
-        setBio(bio);
-        setHobbies(hobbies);
-        setInterestedGender(preference?.interestedGender || "female");
-      }
-    };
-    loadProfile();
-  }, []);
+  // Initialize state from context
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl || "");
+  const [bio, setBio] = useState(profile.bio || "");
+  const [hobbies, setHobbies] = useState(profile.hobbies || []);
+  const [interestedGender, setInterestedGender] = useState(
+    profile.preference?.interestedGender || "female"
+  );
 
   const toggleHobby = (hobbyName) => {
     setHobbies((prev) => {
@@ -47,16 +49,21 @@ const EditProfileScreen = () => {
   };
 
   const handleSave = async () => {
-    const profileData = {
+    const newProfile = {
+      ...profile,
       avatarUrl,
       bio,
       hobbies,
       preference: {
+        ...profile.preference,
         interestedGender,
       },
     };
-    await AsyncStorage.setItem("profile", JSON.stringify(profileData));
-    navigation.goBack();
+    // Save to storage
+    await AsyncStorage.setItem("profile", JSON.stringify(newProfile));
+    // Update context
+    updateProfile(newProfile);
+    navigation.navigate("Profile");
   };
 
   return (
@@ -95,26 +102,32 @@ const EditProfileScreen = () => {
 
       <Text className="text-sm font-semibold text-gray-600 mb-2">Interested Gender</Text>
       <View className="flex-row space-x-4 mb-6">
-        {[{ label: "Male", value: "male", icon: "♂" }, { label: "Female", value: "female", icon: "♀" }].map((item) => (
+        {[
+          { label: "Male", value: "male", icon: "♂" },
+          { label: "Female", value: "female", icon: "♀" },
+        ].map((item) => (
           <TouchableOpacity
             key={item.value}
             onPress={() => setInterestedGender(item.value)}
             style={{
               flexDirection: "row",
               alignItems: "center",
-              backgroundColor: interestedGender === item.value ? "#f472b6" : "#e5e7eb",
+              backgroundColor:
+                interestedGender === item.value ? "#f472b6" : "#e5e7eb",
               paddingHorizontal: 16,
               paddingVertical: 10,
               borderRadius: 9999,
               borderWidth: 1,
-              borderColor: interestedGender === item.value ? "#be185d" : "#d1d5db",
+              borderColor:
+                interestedGender === item.value ? "#be185d" : "#d1d5db",
             }}
           >
             <Text
               style={{
                 fontSize: 16,
                 fontWeight: "600",
-                color: interestedGender === item.value ? "#fff" : "#1f2937",
+                color:
+                  interestedGender === item.value ? "#fff" : "#1f2937",
                 marginRight: 6,
               }}
             >
@@ -124,7 +137,8 @@ const EditProfileScreen = () => {
               style={{
                 fontSize: 16,
                 fontWeight: "600",
-                color: interestedGender === item.value ? "#fff" : "#1f2937",
+                color:
+                  interestedGender === item.value ? "#fff" : "#1f2937",
               }}
             >
               {item.label}
@@ -150,7 +164,14 @@ const EditProfileScreen = () => {
                 marginBottom: 8,
               }}
             >
-              <Text style={{ color: selected ? "white" : "#374151", fontWeight: "600" }}>{hobby}</Text>
+              <Text
+                style={{
+                  color: selected ? "white" : "#374151",
+                  fontWeight: "600",
+                }}
+              >
+                {hobby}
+              </Text>
             </TouchableOpacity>
           );
         })}

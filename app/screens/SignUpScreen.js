@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
+// import DateTimePicker from "@react-native-community/datetimepicker";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -223,7 +223,7 @@ const SignUpScreen = ({ navigation }) => {
         >
           <Text>{birthDate.toDateString()}</Text>
         </Pressable>
-        {showDatePicker && (
+        {/* {showDatePicker && (
           <DateTimePicker
             value={birthDate}
             mode="date"
@@ -231,7 +231,7 @@ const SignUpScreen = ({ navigation }) => {
             onChange={handleDateChange}
             maximumDate={new Date()}
           />
-        )}
+        )} */}
       </View>
 
       <View className="mb-4">

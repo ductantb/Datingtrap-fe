@@ -8,6 +8,7 @@ import ChatListScreen from "./app/screens/ChatListScreen";
 import ProfileScreen from "./app/screens/ProfileScreen";
 import MatchSreen from "./app/screens/MatchSreen.js";
 import EditProfileScreen from "./app/screens/EditProfileScreen";
+import DiscoverScreen from "./app/screens/DiscoverScreen.js";
 
 import NotificationScreen from "./app/screens/NotificationScreen.js";
 
@@ -28,6 +29,7 @@ const StackNavigator = () => {
 
           <Stack.Screen name="Notifications" component={NotificationScreen} />
           <Stack.Screen name="MatchScreen" component={MatchSreen} />
+          <Stack.Screen name="DiscoverScreen" component={DiscoverScreen} />
         </>
       ) : (
         <>

@@ -64,6 +64,7 @@ const ChatScreen = () => {
   // Mock current user ID
   const currentUserId = 1;
 
+  const id = 2;
   // Mock partner data - in real app this would come from matchData
   const partnerData = matchData || {
     id: 2,
@@ -114,11 +115,10 @@ const ChatScreen = () => {
           const partnerMessage = {
             id: messages.length + 2,
             text: randomResponse,
-            senderId: partnerData.id,
+            senderId: id,
             timestamp: new Date(),
             isRead: false,
           };
-
           setMessages((prev) => [...prev, partnerMessage]);
         }, 2000);
       }, 1000);
@@ -150,51 +150,63 @@ const ChatScreen = () => {
       messages[index + 1].senderId !== item.senderId;
 
     return (
+  <View
+    style={[
+      styles.messageContainer,
+      isCurrentUser ? styles.currentUserMessage : styles.partnerMessage,
+    ]}
+  >
+    {!isCurrentUser && showAvatar && (
+      <Image
+        source={{ uri: partnerData.avatarUrl }}
+        style={styles.messageAvatar}
+      />
+    )}
+    {!isCurrentUser && !showAvatar && (
+      <View style={styles.avatarPlaceholder} />
+    )}
+
+    <View>
       <View
         style={[
-          styles.messageContainer,
-          isCurrentUser ? styles.currentUserMessage : styles.partnerMessage,
+          styles.messageBubble,
+          isCurrentUser ? styles.currentUserBubble : styles.partnerBubble,
+          { maxWidth: wp(70) },
         ]}
       >
-        {!isCurrentUser && showAvatar && (
-          <Image
-            source={{ uri: partnerData.avatarUrl }}
-            style={styles.messageAvatar}
-          />
-        )}
-        {!isCurrentUser && !showAvatar && (
-          <View style={styles.avatarPlaceholder} />
-        )}
-
-        <View
+        <Text
           style={[
-            styles.messageBubble,
-            isCurrentUser ? styles.currentUserBubble : styles.partnerBubble,
-            { maxWidth: wp(70) },
+            styles.messageText,
+            isCurrentUser ? styles.currentUserText : styles.partnerText,
           ]}
         >
-          <Text
-            style={[
-              styles.messageText,
-              isCurrentUser ? styles.currentUserText : styles.partnerText,
-            ]}
-          >
-            {item.text}
-          </Text>
-        </View>
+          {item.text}
+        </Text>
+      </View>
 
-        {isCurrentUser && showTime && (
-          <View style={styles.messageStatus}>
-            <Text style={styles.timeText}>{formatTime(item.timestamp)}</Text>
+      {/* Show time below bubble */}
+      {showTime && (
+        <View
+          style={[
+            styles.messageStatus,
+            { justifyContent: isCurrentUser ? "flex-end" : "flex-start" },
+          ]}
+        >
+          <Text style={styles.timeText}>{formatTime(item.timestamp)}</Text>
+          {isCurrentUser && (
             <Ionicons
               name={item.isRead ? "checkmark-done" : "checkmark"}
               size={12}
               color={item.isRead ? "#4A90E2" : "#666"}
+              style={{ marginLeft: 3 }}
             />
-          </View>
-        )}
-      </View>
-    );
+          )}
+        </View>
+      )}
+    </View>
+  </View>
+  
+);
   };
 
   const renderTypingIndicator = () => {
@@ -320,17 +332,17 @@ const ChatScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: "#F0F2F5", // màu nền nhẹ nhàng hơn
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 12,
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    elevation: 2,
+    elevation: 3,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -346,10 +358,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     marginRight: 12,
+    borderWidth: 2,
+    borderColor: "#4CD964", // xanh khi online
   },
   headerInfo: {
     flex: 1,
@@ -361,7 +375,7 @@ const styles = StyleSheet.create({
   },
   headerStatus: {
     fontSize: 14,
-    color: "#4A90E2",
+    color: "#4CD964",
     marginTop: 2,
   },
   headerButton: {
@@ -372,11 +386,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   messagesContent: {
-    paddingVertical: 15,
+    paddingVertical: 12,
   },
   messageContainer: {
     flexDirection: "row",
-    marginVertical: 2,
+    marginVertical: 4,
     paddingHorizontal: 15,
   },
   currentUserMessage: {
@@ -386,38 +400,49 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   messageAvatar: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     marginRight: 8,
     alignSelf: "flex-end",
   },
   avatarPlaceholder: {
-    width: 30,
+    width: 32,
     marginRight: 8,
   },
   messageBubble: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 20,
-    maxWidth: "80%",
+    borderRadius: 18,
+    maxWidth: "75%",
   },
   currentUserBubble: {
     backgroundColor: "#4A90E2",
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    borderBottomLeftRadius: 18,
     borderBottomRightRadius: 5,
-  },
-  partnerBubble: {
-    backgroundColor: "white",
-    borderBottomLeftRadius: 5,
-    elevation: 1,
+    elevation: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 1,
+    shadowRadius: 2,
+  },
+  partnerBubble: {
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    borderBottomRightRadius: 18,
+    borderBottomLeftRadius: 5,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   messageText: {
     fontSize: 16,
-    lineHeight: 20,
+    lineHeight: 21,
   },
   currentUserText: {
     color: "white",
@@ -426,16 +451,15 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   messageStatus: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginLeft: 5,
-    alignSelf: "flex-end",
-  },
-  timeText: {
-    fontSize: 11,
-    color: "#666",
-    marginRight: 3,
-  },
+  flexDirection: "row",
+  alignItems: "center",
+  marginTop: 4,
+  paddingHorizontal: 5,
+},
+timeText: {
+  fontSize: 11,
+  color: "#999",
+},
   typingBubble: {
     paddingVertical: 15,
   },
@@ -444,25 +468,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   typingDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#666",
-    marginHorizontal: 2,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#999",
+    marginHorizontal: 3,
   },
   inputContainer: {
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 12,
     backgroundColor: "white",
     borderTopWidth: 1,
     borderTopColor: "#E0E0E0",
   },
   attachButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#F0F0F0",
     justifyContent: "center",
     alignItems: "center",
@@ -470,29 +494,30 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    minHeight: 36,
-    maxHeight: 100,
+    minHeight: 40,
+    maxHeight: 120,
     borderWidth: 1,
     borderColor: "#E0E0E0",
-    borderRadius: 18,
+    borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 8,
     fontSize: 16,
-    backgroundColor: "#F8F9FA",
+    backgroundColor: "#F9F9F9",
+    color: "#333",
   },
   sendButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#4A90E2",
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 10,
   },
   voiceButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#F0F0F0",
     justifyContent: "center",
     alignItems: "center",

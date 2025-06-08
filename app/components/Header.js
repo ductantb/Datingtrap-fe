@@ -17,6 +17,10 @@ const Header = () => {
         />
       </TouchableOpacity>
 
+      <TouchableOpacity onPress={() => navigation.navigate("Discover")}>
+        <Ionicons name="star-outline" size={30} color="black" />
+      </TouchableOpacity>
+
       <TouchableOpacity>
         <Text className="text-3xl font-bold "> Dating trap </Text>
       </TouchableOpacity>

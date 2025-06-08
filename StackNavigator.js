@@ -6,10 +6,9 @@ import LoginScreen from "./app/screens/LoginScreen";
 import SignUpScreen from "./app/screens/SignUpScreen";
 import ChatListScreen from "./app/screens/ChatListScreen";
 import ProfileScreen from "./app/screens/ProfileScreen";
-
 import EditProfileScreen from "./app/screens/EditProfileScreen";
-
 import NotificationScreen from "./app/screens/NotificationScreen.js";
+import DiscoverScreen from "./app/screens/DiscoverScreen.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +24,7 @@ const StackNavigator = () => {
           <Stack.Screen name="Profile" component={ProfileScreen} />
 
           <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-
+          <Stack.Screen name="Discover" component={DiscoverScreen} />
           <Stack.Screen name="Notifications" component={NotificationScreen} />
         </>
       ) : (

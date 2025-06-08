@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,12 +7,12 @@ import {
   Image,
   StyleSheet,
   TextInput,
-  SafeAreaView,
   RefreshControl,
-  Alert
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+  Alert,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -20,16 +20,17 @@ import {
 
 const ChatListScreen = () => {
   const navigation = useNavigation();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [refreshing, setRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState('matches'); // 'matches' or 'messages'
-  
+  const [activeTab, setActiveTab] = useState("matches"); // 'matches' or 'messages'
+
   // Mock data for matches and conversations
   const [matches, setMatches] = useState([
     {
       id: 1,
       name: "Sarah Johnson",
-      avatarUrl: "https://i.pinimg.com/736x/42/7e/54/427e549668d89c519811fd77a9a6f7f9.jpg",
+      avatarUrl:
+        "https://i.pinimg.com/736x/42/7e/54/427e549668d89c519811fd77a9a6f7f9.jpg",
       age: 25,
       mutualFriends: 3,
       isOnline: true,
@@ -38,7 +39,8 @@ const ChatListScreen = () => {
     {
       id: 2,
       name: "Emma Wilson",
-      avatarUrl: "https://i.pinimg.com/736x/49/67/4c/49674ccc074f5b28829c058d293cad60.jpg",
+      avatarUrl:
+        "https://i.pinimg.com/736x/49/67/4c/49674ccc074f5b28829c058d293cad60.jpg",
       age: 23,
       mutualFriends: 1,
       isOnline: false,
@@ -47,7 +49,8 @@ const ChatListScreen = () => {
     {
       id: 3,
       name: "Jessica Chen",
-      avatarUrl: "https://i.pinimg.com/736x/48/62/99/486299625e08a1e62ad9451dac4630ff.jpg",
+      avatarUrl:
+        "https://i.pinimg.com/736x/48/62/99/486299625e08a1e62ad9451dac4630ff.jpg",
       age: 27,
       mutualFriends: 5,
       isOnline: true,
@@ -56,12 +59,13 @@ const ChatListScreen = () => {
     {
       id: 4,
       name: "Maria Garcia",
-      avatarUrl: "https://i.pinimg.com/736x/47/88/22/478822b8b8c8c745ac4b56b1f79dc2b9.jpg",
+      avatarUrl:
+        "https://i.pinimg.com/736x/47/88/22/478822b8b8c8c745ac4b56b1f79dc2b9.jpg",
       age: 24,
       mutualFriends: 2,
       isOnline: false,
       matchedAt: new Date(Date.now() - 432000000), // 5 days ago
-    }
+    },
   ]);
 
   const [conversations, setConversations] = useState([
@@ -69,7 +73,8 @@ const ChatListScreen = () => {
       id: 1,
       matchId: 1,
       name: "Sarah Johnson",
-      avatarUrl: "https://i.pinimg.com/736x/42/7e/54/427e549668d89c519811fd77a9a6f7f9.jpg",
+      avatarUrl:
+        "https://i.pinimg.com/736x/42/7e/54/427e549668d89c519811fd77a9a6f7f9.jpg",
       lastMessage: "That sounds amazing! I'd love to go hiking this weekend 🏔️",
       lastMessageTime: new Date(Date.now() - 1800000), // 30 minutes ago
       unreadCount: 2,
@@ -80,7 +85,8 @@ const ChatListScreen = () => {
       id: 2,
       matchId: 2,
       name: "Emma Wilson",
-      avatarUrl: "https://i.pinimg.com/736x/49/67/4c/49674ccc074f5b28829c058d293cad60.jpg",
+      avatarUrl:
+        "https://i.pinimg.com/736x/49/67/4c/49674ccc074f5b28829c058d293cad60.jpg",
       lastMessage: "Thanks for the great conversation yesterday!",
       lastMessageTime: new Date(Date.now() - 43200000), // 12 hours ago
       unreadCount: 0,
@@ -91,7 +97,8 @@ const ChatListScreen = () => {
       id: 3,
       matchId: 3,
       name: "Jessica Chen",
-      avatarUrl: "https://i.pinimg.com/736x/48/62/99/486299625e08a1e62ad9451dac4630ff.jpg",
+      avatarUrl:
+        "https://i.pinimg.com/736x/48/62/99/486299625e08a1e62ad9451dac4630ff.jpg",
       lastMessage: "Hey! Nice to match with you 😊",
       lastMessageTime: new Date(Date.now() - 86400000), // 1 day ago
       unreadCount: 1,
@@ -102,13 +109,14 @@ const ChatListScreen = () => {
       id: 4,
       matchId: 5,
       name: "Lisa Anderson",
-      avatarUrl: "https://i.pinimg.com/736x/50/29/77/502977a7b5e2d94f5a1ea3b3da15f8e0.jpg",
+      avatarUrl:
+        "https://i.pinimg.com/736x/50/29/77/502977a7b5e2d94f5a1ea3b3da15f8e0.jpg",
       lastMessage: "I saw your photography work, it's incredible!",
       lastMessageTime: new Date(Date.now() - 172800000), // 2 days ago
       unreadCount: 0,
       isOnline: false,
       isTyping: false,
-    }
+    },
   ]);
 
   const onRefresh = () => {
@@ -125,7 +133,7 @@ const ChatListScreen = () => {
     const diffInMinutes = Math.floor((now - messageTime) / (1000 * 60));
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);
-    
+
     if (diffInMinutes < 1) return "now";
     if (diffInMinutes < 60) return `${diffInMinutes}m`;
     if (diffInHours < 24) return `${diffInHours}h`;
@@ -133,75 +141,71 @@ const ChatListScreen = () => {
     return messageTime.toLocaleDateString();
   };
 
-  const filteredMatches = matches.filter(match =>
+  const filteredMatches = matches.filter((match) =>
     match.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredConversations = conversations.filter(conv =>
+  const filteredConversations = conversations.filter((conv) =>
     conv.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleMatchPress = (match) => {
     // Check if there's already a conversation with this match
-    const existingConv = conversations.find(conv => conv.matchId === match.id);
-    
+    const existingConv = conversations.find(
+      (conv) => conv.matchId === match.id
+    );
+
     if (existingConv) {
       // Navigate to existing chat
-      navigation.navigate('Chat', { 
+      navigation.navigate("Chat", {
         matchData: {
           id: match.id,
           name: match.name,
           avatarUrl: match.avatarUrl,
-          isOnline: match.isOnline
-        }
+          isOnline: match.isOnline,
+        },
       });
     } else {
       // Start new conversation
-      Alert.alert(
-        "Start Conversation",
-        `Send a message to ${match.name}?`,
-        [
-          { text: "Cancel", style: "cancel" },
-          { 
-            text: "Send Message", 
-            onPress: () => {
-              navigation.navigate('Chat', { 
-                matchData: {
-                  id: match.id,
-                  name: match.name,
-                  avatarUrl: match.avatarUrl,
-                  isOnline: match.isOnline
-                }
-              });
-            }
-          }
-        ]
-      );
+      Alert.alert("Start Conversation", `Send a message to ${match.name}?`, [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Send Message",
+          onPress: () => {
+            navigation.navigate("Chat", {
+              matchData: {
+                id: match.id,
+                name: match.name,
+                avatarUrl: match.avatarUrl,
+                isOnline: match.isOnline,
+              },
+            });
+          },
+        },
+      ]);
     }
   };
 
   const handleConversationPress = (conversation) => {
-    navigation.navigate('Chat', { 
+    navigation.navigate("Chat", {
       matchData: {
         id: conversation.matchId,
         name: conversation.name,
         avatarUrl: conversation.avatarUrl,
-        isOnline: conversation.isOnline
-      }
+        isOnline: conversation.isOnline,
+      },
     });
-    
+
     // Mark as read
-    setConversations(prev => 
-      prev.map(conv => 
-        conv.id === conversation.id 
-          ? { ...conv, unreadCount: 0 }
-          : conv
+    setConversations((prev) =>
+      prev.map((conv) =>
+        conv.id === conversation.id ? { ...conv, unreadCount: 0 } : conv
       )
     );
   };
 
   const renderMatch = ({ item }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.matchCard}
       onPress={() => handleMatchPress(item)}
     >
@@ -217,15 +221,18 @@ const ChatListScreen = () => {
   );
 
   const renderConversation = ({ item }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.conversationItem}
       onPress={() => handleConversationPress(item)}
     >
       <View style={styles.conversationImageContainer}>
-        <Image source={{ uri: item.avatarUrl }} style={styles.conversationImage} />
+        <Image
+          source={{ uri: item.avatarUrl }}
+          style={styles.conversationImage}
+        />
         {item.isOnline && <View style={styles.onlineIndicatorSmall} />}
       </View>
-      
+
       <View style={styles.conversationContent}>
         <View style={styles.conversationHeader}>
           <Text style={styles.conversationName} numberOfLines={1}>
@@ -235,13 +242,13 @@ const ChatListScreen = () => {
             {formatTime(item.lastMessageTime)}
           </Text>
         </View>
-        
+
         <View style={styles.conversationMessageRow}>
-          <Text 
+          <Text
             style={[
               styles.conversationMessage,
-              item.unreadCount > 0 && styles.unreadMessage
-            ]} 
+              item.unreadCount > 0 && styles.unreadMessage,
+            ]}
             numberOfLines={1}
           >
             {item.isTyping ? "typing..." : item.lastMessage}
@@ -249,7 +256,7 @@ const ChatListScreen = () => {
           {item.unreadCount > 0 && (
             <View style={styles.unreadBadge}>
               <Text style={styles.unreadCount}>
-                {item.unreadCount > 9 ? '9+' : item.unreadCount}
+                {item.unreadCount > 9 ? "9+" : item.unreadCount}
               </Text>
             </View>
           )}
@@ -259,16 +266,15 @@ const ChatListScreen = () => {
   );
 
   const renderHeader = () => (
-    
     <View style={styles.header}>
-      <TouchableOpacity 
-        onPress={() => navigation.goBack()}
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Home")}
         style={styles.backButton}
       >
-      <Ionicons name="arrow-back" size={24} color="#333" />
+        <Ionicons name="arrow-back" size={24} color="#333" />
       </TouchableOpacity>
       <Text style={styles.headerTitle}>Messages</Text>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.headerButton}
         onPress={() => Alert.alert("Filter options coming soon!")}
       >
@@ -279,7 +285,12 @@ const ChatListScreen = () => {
 
   const renderSearchBar = () => (
     <View style={styles.searchContainer}>
-      <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
+      <Ionicons
+        name="search"
+        size={20}
+        color="#999"
+        style={styles.searchIcon}
+      />
       <TextInput
         style={styles.searchInput}
         placeholder="Search matches and messages..."
@@ -288,8 +299,8 @@ const ChatListScreen = () => {
         placeholderTextColor="#999"
       />
       {searchQuery.length > 0 && (
-        <TouchableOpacity 
-          onPress={() => setSearchQuery('')}
+        <TouchableOpacity
+          onPress={() => setSearchQuery("")}
           style={styles.clearButton}
         >
           <Ionicons name="close-circle" size={20} color="#999" />
@@ -300,21 +311,32 @@ const ChatListScreen = () => {
 
   const renderTabs = () => (
     <View style={styles.tabContainer}>
-      <TouchableOpacity 
-        style={[styles.tab, activeTab === 'matches' && styles.activeTab]}
-        onPress={() => setActiveTab('matches')}
+      <TouchableOpacity
+        style={[styles.tab, activeTab === "matches" && styles.activeTab]}
+        onPress={() => setActiveTab("matches")}
       >
-        <Text style={[styles.tabText, activeTab === 'matches' && styles.activeTabText]}>
+        <Text
+          style={[
+            styles.tabText,
+            activeTab === "matches" && styles.activeTabText,
+          ]}
+        >
           New Matches ({filteredMatches.length})
         </Text>
       </TouchableOpacity>
-      
-      <TouchableOpacity 
-        style={[styles.tab, activeTab === 'messages' && styles.activeTab]}
-        onPress={() => setActiveTab('messages')}
+
+      <TouchableOpacity
+        style={[styles.tab, activeTab === "messages" && styles.activeTab]}
+        onPress={() => setActiveTab("messages")}
       >
-        <Text style={[styles.tabText, activeTab === 'messages' && styles.activeTabText]}>
-          Messages ({filteredConversations.filter(c => c.unreadCount > 0).length})
+        <Text
+          style={[
+            styles.tabText,
+            activeTab === "messages" && styles.activeTabText,
+          ]}
+        >
+          Messages (
+          {filteredConversations.filter((c) => c.unreadCount > 0).length})
         </Text>
       </TouchableOpacity>
     </View>
@@ -322,18 +344,18 @@ const ChatListScreen = () => {
 
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Ionicons 
-        name={activeTab === 'matches' ? "heart" : "chatbubble"} 
-        size={50} 
-        color="#CCC" 
+      <Ionicons
+        name={activeTab === "matches" ? "heart" : "chatbubble"}
+        size={50}
+        color="#CCC"
       />
       <Text style={styles.emptyStateTitle}>
-        {activeTab === 'matches' ? 'No new matches' : 'No conversations yet'}
+        {activeTab === "matches" ? "No new matches" : "No conversations yet"}
       </Text>
       <Text style={styles.emptyStateSubtitle}>
-        {activeTab === 'matches' 
-          ? 'Keep swiping to find your perfect match!' 
-          : 'Start a conversation with your matches!'}
+        {activeTab === "matches"
+          ? "Keep swiping to find your perfect match!"
+          : "Start a conversation with your matches!"}
       </Text>
     </View>
   );
@@ -343,8 +365,8 @@ const ChatListScreen = () => {
       {renderHeader()}
       {renderSearchBar()}
       {renderTabs()}
-      
-      {activeTab === 'matches' ? (
+
+      {activeTab === "matches" ? (
         filteredMatches.length > 0 ? (
           <FlatList
             data={filteredMatches}
@@ -380,36 +402,36 @@ const ChatListScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: "#F8F9FA",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: "#E0E0E0",
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   headerButton: {
     padding: 5,
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
     marginHorizontal: 15,
     marginVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 25,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -421,20 +443,20 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   clearButton: {
     padding: 5,
   },
   tabContainer: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    backgroundColor: "white",
     marginHorizontal: 15,
     marginBottom: 10,
     borderRadius: 25,
     padding: 5,
     elevation: 1,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 1,
@@ -444,30 +466,30 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   activeTab: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: "#4A90E2",
   },
   tabText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
+    fontWeight: "600",
+    color: "#666",
   },
   activeTabText: {
-    color: 'white',
+    color: "white",
   },
   matchesList: {
     paddingHorizontal: 15,
     paddingVertical: 20,
   },
   matchCard: {
-    alignItems: 'center',
+    alignItems: "center",
     marginRight: 15,
     width: 80,
   },
   matchImageContainer: {
-    position: 'relative',
+    position: "relative",
     marginBottom: 8,
   },
   matchImage: {
@@ -475,51 +497,51 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     borderWidth: 3,
-    borderColor: '#4A90E2',
+    borderColor: "#4A90E2",
   },
   onlineIndicator: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 2,
     right: 2,
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
     borderWidth: 2,
-    borderColor: 'white',
+    borderColor: "white",
   },
   matchName: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#333',
-    textAlign: 'center',
+    fontWeight: "600",
+    color: "#333",
+    textAlign: "center",
     marginBottom: 2,
   },
   matchAge: {
     fontSize: 11,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
   conversationsList: {
     flex: 1,
   },
   conversationItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 12,
     marginHorizontal: 15,
     marginVertical: 3,
     borderRadius: 15,
     elevation: 1,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 1,
   },
   conversationImageContainer: {
-    position: 'relative',
+    position: "relative",
     marginRight: 12,
   },
   conversationImage: {
@@ -528,82 +550,82 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   onlineIndicatorSmall: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 0,
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
     borderWidth: 2,
-    borderColor: 'white',
+    borderColor: "white",
   },
   conversationContent: {
     flex: 1,
   },
   conversationHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 4,
   },
   conversationName: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     flex: 1,
   },
   conversationTime: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginLeft: 10,
   },
   conversationMessageRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   conversationMessage: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     flex: 1,
-    fontStyle: 'normal',
+    fontStyle: "normal",
   },
   unreadMessage: {
-    color: '#333',
-    fontWeight: '500',
+    color: "#333",
+    fontWeight: "500",
   },
   unreadBadge: {
-    backgroundColor: '#4A90E2',
+    backgroundColor: "#4A90E2",
     borderRadius: 10,
     minWidth: 20,
     height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: 10,
   },
   unreadCount: {
-    color: 'white',
+    color: "white",
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   emptyState: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 40,
   },
   emptyStateTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginTop: 15,
     marginBottom: 5,
   },
   emptyStateSubtitle: {
     fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
     lineHeight: 20,
   },
 });

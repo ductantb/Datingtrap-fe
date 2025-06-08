@@ -1,3 +1,4 @@
+import React, { useContext, useMemo } from "react";
 import {
   View,
   Text,
@@ -5,12 +6,11 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import React, { useContext } from "react";
-import { useMemo } from "react";
 import TinderCard from "react-tinder-card";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
 import { TinderCardsContext } from "../contexts/TinderCardsContext";
 
 const { width, height } = Dimensions.get("window");
@@ -20,30 +20,38 @@ const TinderCardComponent = () => {
     cards,
     currentIndex,
     setCurrentIndex,
-    lastDirection,
     setLastDirection,
-    currentIndexRef,
     childRefs,
     swipeCard,
     restoreCard,
   } = useContext(TinderCardsContext);
 
+  const navigation = useNavigation();
+
+  // Lấy 5 cards ngẫu nhiên để hiển thị
   const randomFiveCards = useMemo(() => {
     if (!cards || cards.length === 0) return [];
-
-    // Copy và xáo trộn mảng cards
     const shuffled = [...cards].sort(() => 0.5 - Math.random());
-
-    // Lấy 5 phần tử đầu
     return shuffled.slice(0, 5);
   }, [cards]);
 
   const canSwipe = currentIndex >= 0;
 
+  // Gọi swipeCard từ context
   const swipe = async (dir) => {
     if (canSwipe && currentIndex < cards.length) {
       await swipeCard(dir);
     }
+  };
+
+  // Xử lý khi user swipe
+  const swiped = (direction, name, index) => {
+    const character = cards[index];
+    if (direction === "right" && character?.id === 2) {
+      navigation.navigate("MatchScreen");
+    }
+    setLastDirection(direction);
+    setCurrentIndex(index - 1);
   };
 
   return (
@@ -53,13 +61,10 @@ const TinderCardComponent = () => {
           <TinderCard
             ref={childRefs[index]}
             key={user.id}
-            onSwipe={(dir) => {
-              setLastDirection(dir);
-              setCurrentIndex(index - 1);
-            }}
+            onSwipe={(dir) => swiped(dir, user.username, index)}
             onCardLeftScreen={() => restoreCard(user.username, index)}
             preventSwipe={["up", "down"]}
-            flickOnSwipe={true}
+            flickOnSwipe
             swipeRequirementType="position"
             swipeThreshold={width * 0.65}
           >
@@ -90,34 +95,50 @@ const TinderCardComponent = () => {
                 end={{ x: 0.5, y: 1 }}
               />
 
-              <View className="absolute bottom-10 justify-start w-full items-start pl-4 pr-4">
+              <View className="absolute bottom-10 w-full px-4">
                 {/* Name + Age */}
                 <View className="flex-row items-center mb-1">
                   <Text className="text-2xl text-white font-bold">
                     {user.username},{" "}
                   </Text>
-                  <Text className="text-2xl text-white font-bold">{user.age}</Text>
+                  <Text className="text-2xl text-white font-bold">
+                    {user.age}
+                  </Text>
                 </View>
 
                 {/* Job */}
-                <Text className="text-white text-base mb-1">{user.job}</Text>
+                {user.job && (
+                  <Text className="text-white text-base mb-1">
+                    {user.job}
+                  </Text>
+                )}
+
+                {/* Location tĩnh hoặc dynamic nếu có */}
+                <View className="flex-row items-center mb-1">
+                  <MaterialIcons name="location-on" size={18} color="white" />
+                  <Text className="text-lg text-white ml-1">
+                    {user.location || "Hanoi, Viet Nam"}
+                  </Text>
+                </View>
 
                 {/* Bio */}
-                {user.bio ? (
+                {user.bio && (
                   <Text className="text-white text-sm mb-1 italic">
                     {user.bio}
                   </Text>
-                ) : null}
+                )}
 
                 {/* Hobbies */}
-                {user.hobbies && user.hobbies.length > 0 && (
+                {user.hobbies?.length > 0 && (
                   <View className="flex-row flex-wrap mt-1">
                     {user.hobbies.map((hobby) => (
                       <View
                         key={hobby.id}
                         className="bg-white px-3 py-1 rounded-full mr-2 mb-2"
                       >
-                        <Text className="text-sm text-black">{hobby.name}</Text>
+                        <Text className="text-sm text-black">
+                          {hobby.name}
+                        </Text>
                       </View>
                     ))}
                   </View>

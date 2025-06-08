@@ -1,24 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
   ScrollView,
   Image,
+  Button,
   TouchableOpacity,
   Modal,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
-import { useNavigation } from "@react-navigation/native";
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from "react-native-responsive-screen";
+import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { useProfile } from "../contexts/ProfileContext";
+import useAuth from "../hooks/useAuth";
 
 const ProfileScreen = () => {
   const { profile } = useProfile();
   const navigation = useNavigation();
+  const { logout } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // Nếu cần load lại profile khi screen focus
+  useFocusEffect(
+    useCallback(() => {
+      // TODO: load lại profile từ storage/API nếu cần
+    }, [])
+  );
 
   const handleDeleteAccount = () => {
     setShowDeleteModal(true);
@@ -26,9 +35,39 @@ const ProfileScreen = () => {
 
   const confirmDeleteAccount = () => {
     setShowDeleteModal(false);
-    // TODO: Gọi API xóa tài khoản ở đây nếu có
+    // TODO: Gọi API xóa tài khoản
     console.log("Account deleted");
     navigation.navigate("Login");
+  };
+
+  const getDatingPurposeIcon = (purpose) => {
+    switch (purpose?.toLowerCase()) {
+      case "serious":
+        return "💍";
+      case "casual":
+        return "😊";
+      case "friendship":
+        return "🤝";
+      default:
+        return "💖";
+    }
+  };
+
+  const getHobbyIcon = (hobby) => {
+    const icons = {
+      Reading: "📚",
+      Traveling: "✈️",
+      Cooking: "👨‍🍳",
+      Music: "🎵",
+      Sports: "⚽",
+      Gaming: "🎮",
+      Photography: "📸",
+      Art: "🎨",
+      Politics: "🗳️",
+      Tourism: "🗺️",
+      Hiking: "🥾",
+    };
+    return icons[hobby] || "🎯";
   };
 
   return (
@@ -37,6 +76,7 @@ const ProfileScreen = () => {
         className="relative bg-white flex-1"
         contentContainerStyle={{ paddingBottom: hp(5) }}
       >
+        {/* Ảnh bìa */}
         <View>
           <Image
             source={{ uri: profile.avatarUrl }}
@@ -49,39 +89,34 @@ const ProfileScreen = () => {
           />
         </View>
 
+        {/* Nút quay lại và camera */}
         <View className="w-full absolute flex-row justify-between items-center pt-10 px-5">
           <TouchableOpacity
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.goBack()}
             className="p-2 rounded-full bg-black/40"
           >
             <Feather name="arrow-left" size={hp(3)} color="white" />
           </TouchableOpacity>
-
-          <View className="p-2 rounded-full bg-black/40">
+          <TouchableOpacity className="p-2 rounded-full bg-black/40">
             <Feather name="camera" size={hp(3.5)} color="white" />
-          </View>
+          </TouchableOpacity>
         </View>
 
+        {/* Thông tin cơ bản */}
         <View className="w-full justify-start items-start px-6 space-y-4 mt-6">
           <View className="flex-row space-x-2 justify-between w-full items-center">
-            <View className="flex-row ">
-              <Text className="text-black text-center font-bold text-xl">
-                {profile.username}
-                {", "}
-              </Text>
-              <Text className="text-black text-center font-bold text-xl ">
-                {profile.age}
+            <View className="flex-row">
+              <Text className="text-black font-bold text-xl">
+                {profile.username}, {profile.age}
               </Text>
             </View>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate("EditProfile")}
-            >
+            <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
               <Text className="text-blue-600">Edit</Text>
             </TouchableOpacity>
           </View>
 
-          <View className="mt-4">
+          {/* Mục Dating Purpose */}
+          <View>
             <Text className="uppercase font-semibold text-neutral-500 tracking-wider mb-2">
               Dating Purpose
             </Text>
@@ -95,13 +130,14 @@ const ProfileScreen = () => {
               }}
             >
               <Text className="text-pink-700 font-medium text-sm">
-                💖
+                {getDatingPurposeIcon(profile.preference.datingPurpose)}{" "}
                 {profile.preference.datingPurpose.charAt(0).toUpperCase() +
                   profile.preference.datingPurpose.slice(1)}
               </Text>
             </View>
           </View>
 
+          {/* BIO */}
           <View>
             <Text className="uppercase font-semibold text-neutral-500 tracking-wider mb-2 mt-6">
               BIO
@@ -111,49 +147,83 @@ const ProfileScreen = () => {
             </Text>
           </View>
 
+          {/* Hobbies */}
           <View>
             <Text className="uppercase font-semibold text-neutral-500 tracking-wider mb-2 mt-6">
               Hobbies
             </Text>
-            <View className="flex-row mt-2">
+            <View className="flex-row mt-2 flex-wrap">
               {profile.hobbies?.map((hobby, index) => (
                 <View
                   key={index}
-                  style={{
-                    borderRadius: 20,
-                    padding: 5,
-                    paddingHorizontal: 10,
-                    marginRight: 5,
-                  }}
-                  className="bg-[#d3d3d3]"
+                  className="bg-[#d3d3d3] rounded-full px-3 py-1 mr-2 mb-2 flex-row items-center"
                 >
+                  <Text className="mr-1">{getHobbyIcon(hobby.name)}</Text>
                   <Text className="text-black">{hobby.name}</Text>
                 </View>
               ))}
             </View>
           </View>
-        </View>
 
-        <View className="mt-10 px-6">
-          <TouchableOpacity
-            onPress={handleDeleteAccount}
-            style={{
-              backgroundColor: "#ff4d4d",
-              paddingVertical: 12,
-              borderRadius: 10,
-            }}
-          >
-            <Text className="text-white text-center font-semibold text-base">
-              Delete Account
+          {/* Preferences Card (Looking For) */}
+          <View className="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100">
+            <Text className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3">
+              Looking For
             </Text>
-          </TouchableOpacity>
+            <View className="space-y-3">
+              <View className="flex-row items-center">
+                <View className="w-8 h-8 bg-purple-100 rounded-full items-center justify-center mr-3">
+                  <Text className="text-purple-600 text-sm">
+                    {profile.preference.interestedGender === "male" ? "♂" : "♀"}
+                  </Text>
+                </View>
+                <Text className="text-gray-700 font-medium">
+                  {profile.preference.interestedGender.charAt(0).toUpperCase() +
+                    profile.preference.interestedGender.slice(1)}
+                </Text>
+              </View>
+
+              <View className="flex-row items-center">
+                <View className="w-8 h-8 bg-green-100 rounded-full items-center justify-center mr-3">
+                  <MaterialIcons name="location-on" size={16} color="#059669" />
+                </View>
+                <Text className="text-gray-700 font-medium">
+                  Within {profile.preference.maxDistance || 50} km
+                </Text>
+              </View>
+
+              <View className="flex-row items-center">
+                <View className="w-8 h-8 bg-orange-100 rounded-full items-center justify-center mr-3">
+                  <MaterialIcons name="cake" size={16} color="#ea580c" />
+                </View>
+                <Text className="text-gray-700 font-medium">
+                  Age {profile.preference.minAge || 18} – {profile.preference.maxAge || 35}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Logout Button */}
+          <View className="mb-4 px-6">
+            <Button title="Logout" onPress={logout} />
+          </View>
+
+          {/* Delete Account Button */}
+          <View className="mt-2 px-6 mb-8">
+            <TouchableOpacity
+              onPress={handleDeleteAccount}
+              className="bg-red-500 rounded-lg py-3"
+            >
+              <Text className="text-white text-center font-semibold">Delete Account</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
 
-      {/* Custom Modal */}
+      {/* Delete Confirmation Modal */}
       <Modal
         animationType="fade"
-        transparent={true}
+        transparent
         visible={showDeleteModal}
         onRequestClose={() => setShowDeleteModal(false)}
       >
@@ -197,8 +267,7 @@ const ProfileScreen = () => {
                 marginBottom: 20,
               }}
             >
-              Are you sure you want to permanently delete your account? This
-              action cannot be undone.
+              Are you sure you want to permanently delete your account? This action cannot be undone.
             </Text>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <TouchableOpacity

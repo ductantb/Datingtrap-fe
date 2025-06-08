@@ -338,8 +338,8 @@ const NotificationScreen = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
+        // onEndReached={loadMore}
+        // onEndReachedThreshold={0.5}
         ListEmptyComponent={renderEmpty}
         ListFooterComponent={renderFooter}
         showsVerticalScrollIndicator={false}

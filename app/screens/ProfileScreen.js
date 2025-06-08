@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, Image } from "react-native";
-import React, { useCallback } from "react";
+import { View, Text, ScrollView, Image, Button, TouchableOpacity } from "react-native";
+import React, { useCallback } from 'react';
 
 import {
   heightPercentageToDP as hp,
@@ -7,10 +7,14 @@ import {
 } from "react-native-responsive-screen";
 
 import Feather from "@expo/vector-icons/Feather";
-import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useProfile } from "../contexts/ProfileContext";
 import { useFocusEffect } from "@react-navigation/native";
+import useAuth from "../hooks/useAuth";
+import { LinearGradient } from "expo-linear-gradient";
+import { MaterialIcons } from '@expo/vector-icons';
+
+
 
 // const Me = {
 //   username: "Bobby",
@@ -35,27 +39,60 @@ import { useFocusEffect } from "@react-navigation/native";
 //   },
 
 // };
+// import { logout } from '../hooks/useAuth';
+
 const ProfileScreen = () => {
   const { profile } = useProfile();
   const navigation = useNavigation();
+  const { logout } = useAuth();
 
-  //   useFocusEffect(
-  //   useCallback(() => {
-  //     const loadProfile = async () => {
-  //       const profileData = await AsyncStorage.getItem("profile");
-  //       if (profileData) {
-  //         const { avatarUrl, bio, hobbies, preference } = JSON.parse(profileData);
-  //         setAvatarUrl(avatarUrl);
-  //         setBio(bio);
-  //         setHobbies(hobbies);
-  //         setInterestedGender(preference?.interestedGender || "female");
-  //       }
-  //     };
-  //     loadProfile();
-  //   }, [])
-  // );
+//   useFocusEffect(
+//   useCallback(() => {
+//     const loadProfile = async () => {
+//       const profileData = await AsyncStorage.getItem("profile");
+//       if (profileData) {
+//         const { avatarUrl, bio, hobbies, preference } = JSON.parse(profileData);
+//         setAvatarUrl(avatarUrl);
+//         setBio(bio);
+//         setHobbies(hobbies);
+//         setInterestedGender(preference?.interestedGender || "female");
+//       }
+//     };
+//     loadProfile();
+//   }, [])
+// );
 
   // console.log(profile.hobbies);
+  const getDatingPurposeIcon = (purpose) => {
+    switch (purpose?.toLowerCase()) {
+      case "serious":
+        return "💍";
+      case "casual":
+        return "😊";
+      case "friendship":
+        return "🤝";
+      default:
+        return "💖";
+    }
+  };
+
+  const getHobbyIcon = (hobby) => {
+    const icons = {
+      Reading: "📚",
+      Traveling: "✈️",
+      Cooking: "👨‍🍳",
+      Music: "🎵",
+      Sports: "⚽",
+      Gaming: "🎮",
+      Photography: "📸",
+      Art: "🎨",
+      Politics: "🗳️",
+      Tourism: "🗺️",
+      Hiking: "🥾",
+    };
+    return icons[hobby] || "🎯";
+  };
+
   return (
     <ScrollView
       className="relative bg-white flex-1"
@@ -157,6 +194,49 @@ const ProfileScreen = () => {
             ))}
           </View>
         </View>
+
+        {/* Preferences Card */}
+        <View className="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100">
+          <Text className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3">
+            Looking For
+          </Text>
+          <View className="space-y-3">
+            <View className="flex-row items-center">
+              <View className="w-8 h-8 bg-purple-100 rounded-full items-center justify-center mr-3">
+                <Text className="text-purple-600 text-sm">
+                  {profile.preference?.interestedGender === "male" ? "♂" : "♀"}
+                </Text>
+              </View>
+              <Text className="text-gray-700 font-medium">
+                {profile.preference?.interestedGender
+                  ?.charAt(0)
+                  .toUpperCase() +
+                  profile.preference?.interestedGender?.slice(1)}
+              </Text>
+            </View>
+
+            <View className="flex-row items-center">
+              <View className="w-8 h-8 bg-green-100 rounded-full items-center justify-center mr-3">
+                <MaterialIcons name="location-on" size={16} color="#059669" />
+              </View>
+              <Text className="text-gray-700 font-medium">
+                Within {profile.preference?.maxDistance || 50} km
+              </Text>
+            </View>
+
+            <View className="flex-row items-center">
+              <View className="w-8 h-8 bg-orange-100 rounded-full items-center justify-center mr-3">
+                <MaterialIcons name="cake" size={16} color="#ea580c" />
+              </View>
+              <Text className="text-gray-700 font-medium">
+                Age {profile.preference?.minAge || 18} -{" "}
+                {profile.preference?.maxAge || 35}
+              </Text>
+            </View>
+          </View>
+        </View>
+          <Button title="Logout" onPress={logout} />
+         <Button title="Delete Account" onPress={logout} />
       </View>
     </ScrollView>
   );

@@ -10,12 +10,14 @@ import MatchSreen from "./app/screens/MatchSreen.js";
 import EditProfileScreen from "./app/screens/EditProfileScreen";
 import DiscoverScreen from "./app/screens/DiscoverScreen.js";
 
+import useAuth from "./app/hooks/useAuth";
+
 import NotificationScreen from "./app/screens/NotificationScreen.js";
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
-  const user = true;
+  const { user } = useAuth();
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {user ? (

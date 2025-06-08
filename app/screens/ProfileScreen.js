@@ -76,7 +76,7 @@ const ProfileScreen = () => {
       <View className="w-full absolute flex-row justify-between items-center pt-10 px-5">
         {/* Nút Return Back */}
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.goBack()}
           className="p-2 rounded-full bg-black/40"
         >
           <Feather name="arrow-left" size={hp(3)} color="white" />

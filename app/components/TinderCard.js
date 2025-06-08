@@ -11,6 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { TinderCardsContext } from "../contexts/TinderCardsContext";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,7 +27,15 @@ const TinderCardComponent = () => {
     restoreCard,
   } = useContext(TinderCardsContext);
 
+  const navigation = useNavigation();
+
   const swiped = (direction, name, index) => {
+    const character = cards[index];
+
+    if (direction === "right" && character?.id === 2) {
+      navigation.navigate("MatchScreen");
+    }
+
     setLastDirection(direction);
     setCurrentIndex(index - 1);
   };
@@ -90,7 +99,9 @@ const TinderCardComponent = () => {
                 </View>
 
                 <View className="flex-row justify-center items-center">
-                  <Text className="text-lg text-white font-regular">Hanoi, </Text>
+                  <Text className="text-lg text-white font-regular">
+                    Hanoi,{" "}
+                  </Text>
                   <Text className="text-lg text-white font-regular mr-2">
                     Viet Nam
                   </Text>

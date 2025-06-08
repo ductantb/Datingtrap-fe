@@ -189,13 +189,11 @@ const SignUpScreen = () => {
 
       console.log("Sign Up Data:", signUpData);
       
-      const profileResult = await registerUserProfile(signUpData);
-      console.log("Profile created:", profileResult);
 
       Alert.alert(
         "Success", 
         "Account created successfully!",
-        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+        [{ text: "OK" }]
       );
 
     } catch (error) {

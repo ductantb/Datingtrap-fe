@@ -75,9 +75,9 @@ const ChatListScreen = () => {
       name: "Sarah Johnson",
       avatarUrl:
         "https://i.pinimg.com/736x/42/7e/54/427e549668d89c519811fd77a9a6f7f9.jpg",
-      lastMessage: "That sounds amazing! I'd love to go hiking this weekend 🏔️",
+      lastMessage: "",
       lastMessageTime: new Date(Date.now() - 1800000), // 30 minutes ago
-      unreadCount: 2,
+      unreadCount: 0,
       isOnline: true,
       isTyping: false,
     },
@@ -103,7 +103,7 @@ const ChatListScreen = () => {
       lastMessageTime: new Date(Date.now() - 86400000), // 1 day ago
       unreadCount: 1,
       isOnline: true,
-      isTyping: true,
+      isTyping: false,
     },
     {
       id: 4,

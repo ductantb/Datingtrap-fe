@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useProfile } from "../contexts/ProfileContext.js";
 
 const Header = () => {
-  const unreadCount = 5;
+  const unreadCount = 3;
   const navigation = useNavigation();
 
   const { profile } = useProfile();

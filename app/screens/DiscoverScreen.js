@@ -5,21 +5,21 @@ import { useNavigation } from '@react-navigation/native';
 
 const categories = [
   {
-    title: 'Looking for Love',
+    title: 'serious',
     icon: <FontAwesome5 name="rose" size={40} color="white" />,
     color: '#B379F4',
     people: '3K',
     target: 'love',
   },
   {
-    title: 'Serious Dating',
+    title: 'casual',
     icon: <FontAwesome5 name="heart" size={36} color="white" />,
     color: '#FF5A5F',
     people: '2K',
     target: 'serious',
   },
   {
-    title: 'Free Tonight',
+    title: 'fun',
     icon: <Ionicons name="moon" size={36} color="white" />,
     color: '#B379F4',
     people: '1K',
@@ -37,9 +37,10 @@ const categories = [
 const DiscoverScreen = () => {
   const navigation = useNavigation();
 
-  const handlePress = (target) => {
-    navigation.navigate('FilteredUsers', { target });
-  };
+  const handlePress = () => {
+  navigation.navigate('Home');
+};
+
 
   return (
     <ScrollView style={styles.container}>
@@ -57,7 +58,7 @@ const DiscoverScreen = () => {
           <Pressable
             key={index}
             style={[styles.card, { backgroundColor: item.color }]}
-            onPress={() => handlePress(item.target)}
+            onPress={handlePress}
           >
             <View style={styles.iconRow}>
               {item.icon}

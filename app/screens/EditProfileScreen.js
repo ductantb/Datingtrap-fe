@@ -10,6 +10,9 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
+import { useProfile } from "../contexts/ProfileContext.js"; // ← Cập nhật đúng path nếu cần
+import { SafeAreaView } from "react-native";
+
 
 const availableHobbies = [
   "Reading",

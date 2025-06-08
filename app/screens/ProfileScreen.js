@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image } from "react-native";
-import React, { useCallback } from 'react';
+import React, { useCallback } from "react";
 
 import {
   heightPercentageToDP as hp,
@@ -7,12 +7,10 @@ import {
 } from "react-native-responsive-screen";
 
 import Feather from "@expo/vector-icons/Feather";
-import { TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useProfile } from "../contexts/ProfileContext";
 import { useFocusEffect } from "@react-navigation/native";
-
-
 
 // const Me = {
 //   username: "Bobby",
@@ -38,25 +36,24 @@ import { useFocusEffect } from "@react-navigation/native";
 
 // };
 const ProfileScreen = () => {
-
   const { profile } = useProfile();
   const navigation = useNavigation();
 
-//   useFocusEffect(
-//   useCallback(() => {
-//     const loadProfile = async () => {
-//       const profileData = await AsyncStorage.getItem("profile");
-//       if (profileData) {
-//         const { avatarUrl, bio, hobbies, preference } = JSON.parse(profileData);
-//         setAvatarUrl(avatarUrl);
-//         setBio(bio);
-//         setHobbies(hobbies);
-//         setInterestedGender(preference?.interestedGender || "female");
-//       }
-//     };
-//     loadProfile();
-//   }, [])
-// );
+  //   useFocusEffect(
+  //   useCallback(() => {
+  //     const loadProfile = async () => {
+  //       const profileData = await AsyncStorage.getItem("profile");
+  //       if (profileData) {
+  //         const { avatarUrl, bio, hobbies, preference } = JSON.parse(profileData);
+  //         setAvatarUrl(avatarUrl);
+  //         setBio(bio);
+  //         setHobbies(hobbies);
+  //         setInterestedGender(preference?.interestedGender || "female");
+  //       }
+  //     };
+  //     loadProfile();
+  //   }, [])
+  // );
 
   // console.log(profile.hobbies);
   return (
@@ -76,8 +73,17 @@ const ProfileScreen = () => {
         />
       </View>
 
-      <View className="w-full absolute flex-row justify-end items-center pt-10">
-        <View className="p-2 rounded-full bg-black/40 mr-5 justify-between">
+      <View className="w-full absolute flex-row justify-between items-center pt-10 px-5">
+        {/* Nút Return Back */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Home")}
+          className="p-2 rounded-full bg-black/40"
+        >
+          <Feather name="arrow-left" size={hp(3)} color="white" />
+        </TouchableOpacity>
+
+        {/* Nút chụp ảnh */}
+        <View className="p-2 rounded-full bg-black/40">
           <Feather name="camera" size={hp(3.5)} color="white" />
         </View>
       </View>
@@ -94,10 +100,9 @@ const ProfileScreen = () => {
             </Text>
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
             <Text className="text-blue-600">Edit</Text>
           </TouchableOpacity>
-
         </View>
 
         <View className="mt-4">
@@ -106,15 +111,17 @@ const ProfileScreen = () => {
           </Text>
           <View
             style={{
-            borderRadius: 20,
-            paddingVertical: 8,
-            paddingHorizontal: 16,
-            backgroundColor: '#ffe4e1',
-            alignSelf: 'flex-start',
+              borderRadius: 20,
+              paddingVertical: 8,
+              paddingHorizontal: 16,
+              backgroundColor: "#ffe4e1",
+              alignSelf: "flex-start",
             }}
           >
             <Text className="text-pink-700 font-medium text-sm">
-              💖{profile.preference.datingPurpose.charAt(0).toUpperCase() + profile.preference.datingPurpose.slice(1)}
+              💖
+              {profile.preference.datingPurpose.charAt(0).toUpperCase() +
+                profile.preference.datingPurpose.slice(1)}
             </Text>
           </View>
         </View>
@@ -130,9 +137,10 @@ const ProfileScreen = () => {
         </View>
 
         <View>
-          <Text className="uppercase font-semibold text-neutral-500 tracking-wider mb-2 mt-6">Hobbies</Text>
+          <Text className="uppercase font-semibold text-neutral-500 tracking-wider mb-2 mt-6">
+            Hobbies
+          </Text>
           <View className="flex-row mt-2">
-            
             {profile.hobbies?.map((hobby, index) => (
               <View
                 key={index}
@@ -149,8 +157,6 @@ const ProfileScreen = () => {
             ))}
           </View>
         </View>
-
-        
       </View>
     </ScrollView>
   );

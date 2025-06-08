@@ -1,105 +1,47 @@
+import React, { useContext } from "react";
 import {
   View,
   Text,
-  Button,
   TouchableWithoutFeedback,
   Image,
   Dimensions,
 } from "react-native";
-import React, { useMemo, useRef } from "react";
 import TinderCard from "react-tinder-card";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useState } from "react";
+import { TinderCardsContext } from "../contexts/TinderCardsContext";
 
-var { width, height } = Dimensions.get("window");
-
-const db = [
-  {
-    id: 1,
-    name: "Huu Thai",
-    job: "Developer",
-    avatarUrl:
-      "https://i.pinimg.com/736x/49/67/4c/49674ccc074f5b28829c058d293cad60.jpg",
-    age: 20,
-  },
-  {
-    id: 2,
-    name: "Duc Tan",
-    job: "Developer",
-    avatarUrl:
-      "https://i.pinimg.com/736x/42/7e/54/427e549668d89c519811fd77a9a6f7f9.jpg",
-    age: 20,
-  },
-  {
-    id: 3,
-    name: "Quang Vu",
-    job: "Developer",
-    avatarUrl:
-      "https://i.pinimg.com/736x/48/62/99/486299625e08a1e62ad9451dac4630ff.jpg",
-    age: 20,
-  },
-  {
-    id: 4,
-    name: "Hung Vu",
-    job: "Developer",
-    avatarUrl:
-      "https://i.pinimg.com/736x/dd/16/a1/dd16a118adec92cbbcdaeee66e8e2677.jpg",
-    age: 20,
-  },
-  {
-    id: 5,
-    name: "Oke Vu",
-    job: "Developer",
-    avatarUrl:
-      "https://i.pinimg.com/736x/b9/92/9f/b9929f0dc9ea56cf80894c704faf4811.jpg",
-    age: 20,
-  },
-];
+const { width, height } = Dimensions.get("window");
 
 const TinderCardComponent = () => {
-  const [currentIndex, setCurrentIndex] = useState(db.length - 1);
-  const [lastDirection, setLastDirection] = useState();
-  // used for outOfFrame closure
-  const currentIndexRef = useRef(currentIndex);
+  const {
+    cards,
+    currentIndex,
+    setCurrentIndex,
+    setLastDirection,
+    currentIndexRef,
+    childRefs,
+    swipeCard,
+    restoreCard,
+  } = useContext(TinderCardsContext);
 
-  const childRefs = useMemo(
-    () =>
-      Array(db.length)
-        .fill(0)
-        .map((i) => React.createRef()),
-    []
-  );
-
-  const updateCurrentIndex = (val) => {
-    setCurrentIndex(val);
-    currentIndexRef.current = val;
-  };
-
-  const canSwipe = currentIndex >= 0;
-
-  const swiped = (direction, nameToDelete, index) => {
+  const swiped = (direction, name, index) => {
     setLastDirection(direction);
-    updateCurrentIndex(index - 1);
+    setCurrentIndex(index - 1);
   };
 
   const outOfFrame = (name, idx) => {
-    console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current);
-
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard();
-  };
-
-  const swipe = async (dir) => {
-    if (canSwipe && currentIndex < db.length) {
-      await childRefs[currentIndex].current.swipe(dir);
+    console.log(`${name} (${idx}) left the screen!`);
+    if (currentIndexRef.current >= idx) {
+      restoreCard(idx);
     }
   };
 
   return (
     <View className="flex h-screen">
-      <View className="flex-1 px-5 pt-5 ">
-        {db.map((character, index) => (
+      <View className="flex-1 px-5 pt-5">
+        {cards.map((character, index) => (
           <TinderCard
             ref={childRefs[index]}
             key={character.id}
@@ -138,22 +80,17 @@ const TinderCardComponent = () => {
               />
 
               <View className="absolute bottom-10 justify-start w-full items-start pl-4">
-                <View className="flex-row justify-center items-center ">
+                <View className="flex-row justify-center items-center">
                   <Text className="text-2xl text-white font-bold">
-                    {character.name}
-                    {", "}
+                    {character.name},{" "}
                   </Text>
                   <Text className="text-2xl text-white font-bold mr-2">
                     {character.age}
                   </Text>
                 </View>
 
-                {/* Location */}
-                <View className="flex-row justify-center items-center ">
-                  <Text className="text-lg text-white font-regular">
-                    Hanoi
-                    {", "}
-                  </Text>
+                <View className="flex-row justify-center items-center">
+                  <Text className="text-lg text-white font-regular">Hanoi, </Text>
                   <Text className="text-lg text-white font-regular mr-2">
                     Viet Nam
                   </Text>
@@ -163,8 +100,9 @@ const TinderCardComponent = () => {
           </TinderCard>
         ))}
       </View>
+
       <View className="flex-row justify-around items-end mb-24 px-8">
-        <TouchableWithoutFeedback onPress={() => swipe("left")}>
+        <TouchableWithoutFeedback onPress={() => swipeCard("left")}>
           <View className="w-20 h-20 bg-red-300 rounded-full justify-center items-center shadow-md">
             <AntDesign name="dislike1" size={30} color="red" />
           </View>
@@ -176,7 +114,7 @@ const TinderCardComponent = () => {
           </View>
         </TouchableWithoutFeedback>
 
-        <TouchableWithoutFeedback onPress={() => swipe("right")}>
+        <TouchableWithoutFeedback onPress={() => swipeCard("right")}>
           <View className="w-20 h-20 bg-green-300 rounded-full justify-center items-center shadow-md">
             <AntDesign name="heart" size={30} color="green" />
           </View>

@@ -1,14 +1,14 @@
 import "./global.css";
 import { NavigationContainer } from "@react-navigation/native";
 import StackNavigator from "./StackNavigator";
-import { ProfileProvider } from "./app/contexts/ProfileContext";
+import { AppProviders } from "./app/contexts/AppProviders";
 
 export default function App() {
   return (
-    <ProfileProvider>
+    <AppProviders>
       <NavigationContainer>
         <StackNavigator />
       </NavigationContainer>
-    </ProfileProvider> 
+    </AppProviders>
   );
 }
